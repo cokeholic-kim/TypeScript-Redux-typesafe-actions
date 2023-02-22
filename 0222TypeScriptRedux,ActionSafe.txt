@@ -87,3 +87,37 @@ createReducer(초기상태값,{
 createReducer<상태타입,액션타입>(초기상태값)
 .handleAction(액션타입,state=>({ count: state.count+1}) )
 .handleAction(액션타입,state=>({ count: state.count+2}) )
+
+정리 typesafe-actions라이브러리 적용하기
+*리덕스 모듈을 좀 더 간결하게 작성
+액션타입,액션생성함수,리듀서함수, 상태타입,액션타입
+1.액션타입
+const INCREASE = "counter/INCREASE" as const
+--->const INCREASE = "counter/INCREASE"
+
+2액션생성함수
+* 액션객체에 type속성만 있는경우
+createStandardAction(액션타입)( );
+* 액션객체에 type속성만 있는경우(payload속성이 있는경우)
+1)전달 받은 타입과 payload 타입이 일치하는경우
+ToggleTodo(1) --> dispatch({action:TOGGLE_TODO , payload: 1})
+createStandardAction(액션타입)<payload값타입>( );
+
+2)전달 받은 타입과 payload타입이 다를경우
+AddTodo("리액트포폴만들기") -->dispatch({ type:ADD_TODO,payload:{id:2, text:"리액트포폴만들기"}})
+createAction(액션타입,action=>(text:string)=>{
+	action({
+		id:2,
+		text:text
+	})
+})
+
+3.액션 객체에 대한 타입
+const actions = { 액션생성함수1,액션생성함수2,액션생성함수3...}
+type TodoAction = ActionType<typeof actions>
+
+4.리듀서
+const todos = createReducer<상태타입,액션타입>(상태초기값,{
+	[액션타입]:(state,action)=>상태리턴
+})
+createStandartAction(액션타입)<페이로드값의type(ex number,string)>( );

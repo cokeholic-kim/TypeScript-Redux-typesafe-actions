@@ -1,0 +1,89 @@
+상태관리
+useState<number>( )
+useReducer(reducer, state)
+
+라이브러리 타입스크립트 지원이 되는지 안되는지 확인
+타입스크립트 지원이 안되면 @types/ 앞에 붙여서 설치.
+index.d.ts 파일을 확인하면 라이브러리가 타입스크립트를 지원하는지 확인가능.
+////
+npm install redux react-redux @types/react-redux
+
+redux명령어
+1.스토어생성 const store = Redux.createStore(리듀서)
+2.상태값반환 store.getState( );
+3.상태업데이트 store.dispatch({액션객체})
+4.구독 - 상태가 업데이트 될때 함수를 호출.
+store.subscribe(함수)
+
+
+redux 사용하기
+
+
+1.스토어 생성하기
+create store = createStore(리덕스모듈,devtools(middleware))
+<Provider store={store}>
+	<App/>
+</Provider>
+2.상태값 반환 리덕스 훅
+const todos = useSelector(state => state.todos) 
+const dispatch = useDispatch( )
+
+
+리덕스 모듈
+1.액션타입, 액션생성함수 , 리듀서
+
+as number  number타입으로 인식함.
+interface Person {
+	name: string;
+	
+}
+const green:Person = {name: "aaa"} //타입은 Person
+
+타입단언
+const green = {name:"bbb"} as Person // 타입은 Person (단언.)
+**타입단언을 사용하면 타입 체크를 하지 안ㅅ음
+타입체커에게 오류를 무시하도록 함
+
+ReturnType<typeof 함수> // 특정한 함수가 리턴해주는 타입
+특정함수의 반환값을 추론
+
+1)리덕스 모듈 생성
+2)루트리듀서 생성 combineReducers({ counter,todos })
+3)스토어 생성
+createStore(루트리듀서)
+
+컴포넌트
+1)프레젠테이션 컴포넌트 //컨테이너 컴포넌트로 부터 상태값을 받아서 화면 구현
+2)컨테이너 컴포넌트 //store에 접근(useSelector()),state 업데이트(useDispatch)
+
+typesafe-actions 라이브러리 npm install typesafe-actions
+리덕스 모듈 굉장히 짧게 코드를 줄여줌
+
+액션생성함수
+ex)
+export const toggleTodo = (id:number)=>({type:TOGGLE_TODO,payload:id}) 
+
+createStandardAction(TOGGLE_TODO)<number>( )
+createStandardAction(REMOVE_TODO)<number>( )
+createStandardAction(ADD_TODO)<text>( )
+//action( ) 함수는 액션객체를 만드는 함수
+***파라미터와 payload값의 형태가 다를때 파라미터를 기반으로
+커스터마이징된 payload 설정일때.
+createAction(ADD_TODO,action=>(text:string)=> action({id:nextid++,text:text}))
+
+//리듀스어
+리듀서 생성 함수
+createReducer<상태타입,액션타입>(초기상태값, { 
+	[액션타입2]:(state,action) => 리턴값.[...state,{...action.payload,isDone:false } ],
+	[액션타입2]:(state,{payload: id}) => 리턴값, 
+	[액션타입3]:(state,{payload: id}) => 리턴값,
+})
+
+createReducer(초기상태값,{
+	[액션타입]:state => ({ count: state.count +1}),//리턴해주는 액션값이없을때는 state만 사용가능
+	[액션타입]:state => ({ count: state.count +2})
+})
+
+createReducer<상태타입,액션타입>(초기상태값)
+.handleAction(액션타입,state=>({ count: state.count+1}) )
+.handleAction(액션타입,state=>({ count: state.count+2}) )
